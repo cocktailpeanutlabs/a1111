@@ -28,7 +28,7 @@ module.exports = async (kernel) => {
     })
   }
   o.run.push({
-    "method": "fs.share",
+    "method": "fs.link",
     "params": {
       "drive": {
         "checkpoints": "app/models/Stable-diffusion",
@@ -54,38 +54,22 @@ module.exports = async (kernel) => {
       ]
     }
   })
-//// Don't use links because gradio requires all files to be under the app directory, unless the app is launched with allowed_paths is specified
-//  o.run.push({
-//    "method": "fs.share",
-//    "params": {
-//      "drive": {
-//        "outputs": "app/outputs"
-//      }
-//    }
-//  })
-  if (kernel.platform === "darwin" && kernel.arch === "x64") {
-    o.run.push({
-      "method": "fs.download",
-      "params": {
-        "uri": "https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.safetensors?download=true",
-        "dir": "app/models/Stable-diffusion"
+  o.run.push({
+    "method": "fs.link",
+    "params": {
+      "drive": {
+        "outputs": "app/outputs"
       }
-    })
-  } else {
-    o.run = o.run.concat([{
-      "method": "fs.download",
-      "params": {
-        "url": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors",
-        "dir": "app/models/Stable-diffusion"
-      }
-    }, {
-      "method": "fs.download",
-      "params": {
-        "url": "https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors",
-        "dir": "app/models/Stable-diffusion"
-      }
-    }])
-  }
+    }
+  })
+  o.run.push({
+    "when": "{{env.SD_INSTALL_CHECKPOINT}}",
+    "method": "fs.download",
+    "params": {
+      "uri": "{{env.SD_INSTALL_CHECKPOINT}}",
+      "dir": "app/models/Stable-diffusion"
+    }
+  })
   o.run = o.run.concat([{
     "method": "shell.run",
     "params": {
