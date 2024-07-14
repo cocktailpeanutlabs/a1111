@@ -1,0 +1,8 @@
+#####################################################################################################################
+#
+# SD_INSTALL_CHECKPOINT
+# - Delete this field if you don't want to auto-download a checkpoint when installing
+# - Replace the URL with another checkpoint link if you want a different checkpoint
+#
+#####################################################################################################################
+SD_INSTALL_CHECKPOINT=https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
